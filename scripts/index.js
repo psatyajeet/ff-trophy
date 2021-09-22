@@ -27,6 +27,9 @@ module.exports = async function main(callback) {
     });
     console.log(winnerName);
 
+    // const yearsWithWinner = await trophy.getYearsWithWinner();
+    // console.log(yearsWithWinner);
+
     callback(0);
   } catch (error) {
     console.error(error);
