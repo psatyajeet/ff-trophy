@@ -57,6 +57,11 @@ describe("Trophy", function () {
     expect(await this.trophy.getWinnerName(tokenId, year2)).to.be.equal(
       "Knowshon Monero"
     );
+
+    const yearsWithWinner = await this.trophy.getYearsWithWinner();
+    expect(yearsWithWinner.length).to.be.equal(2);
+    expect(yearsWithWinner[0].toString()).to.equal(year1.toString());
+    expect(yearsWithWinner[1].toString()).to.equal(year2.toString());
   });
 
   it("does not allow different user to set winner", async function () {

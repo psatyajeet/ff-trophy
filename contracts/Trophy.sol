@@ -13,7 +13,7 @@ contract Trophy is ERC721, Ownable {
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIds;
 
-  // uint16[] public yearsWithWinner;
+  uint16[] public yearsWithWinner;
 
   mapping(string => uint8) hashes;
   mapping(uint256 => mapping(uint16 => string)) yearToWinner;
@@ -47,9 +47,9 @@ contract Trophy is ERC721, Ownable {
     return yearToWinner[tokenId][year];
   }
 
-  // function getYearsWithWinner() public view returns (uint16[] memory) {
-  //   return yearsWithWinner;
-  // }
+  function getYearsWithWinner() public view returns (uint16[] memory) {
+    return yearsWithWinner;
+  }
 
   /**
    * @dev Sets winner name for this year on `tokenId`.
@@ -75,7 +75,7 @@ contract Trophy is ERC721, Ownable {
       "Winner has already been set this year"
     );
 
-    // yearsWithWinner.push(year);
+    yearsWithWinner.push(year);
     yearToWinner[tokenId][year] = winnerName;
 
     emit WinnerNameSet(tokenId, year, winnerName);
