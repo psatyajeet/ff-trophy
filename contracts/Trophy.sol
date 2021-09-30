@@ -13,10 +13,9 @@ contract Trophy is ERC721, Ownable {
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIds;
 
-  uint16[] public yearsWithWinner;
-
   mapping(string => uint8) hashes;
   mapping(uint256 => mapping(uint16 => string)) yearToWinner;
+  mapping(uint256 => uint16[]) yearsWithWinner;
 
   event WinnerNameSet(uint256 tokenId, uint16 year, string winnerName);
 
@@ -27,7 +26,7 @@ contract Trophy is ERC721, Ownable {
     string memory hash,
     string memory tokenURI
   ) public onlyOwner returns (uint256) {
-    require(hashes[hash] != 1);
+    require(hashes[hash] != 1, "token with hash already exists");
     hashes[hash] = 1;
 
     _tokenIds.increment();
@@ -47,8 +46,12 @@ contract Trophy is ERC721, Ownable {
     return yearToWinner[tokenId][year];
   }
 
-  function getYearsWithWinner() public view returns (uint16[] memory) {
-    return yearsWithWinner;
+  function getYearsWithWinner(uint256 tokenId)
+    public
+    view
+    returns (uint16[] memory)
+  {
+    return yearsWithWinner[tokenId];
   }
 
   /**
@@ -75,7 +78,7 @@ contract Trophy is ERC721, Ownable {
       "Winner has already been set this year"
     );
 
-    yearsWithWinner.push(year);
+    yearsWithWinner[tokenId].push(year);
     yearToWinner[tokenId][year] = winnerName;
 
     emit WinnerNameSet(tokenId, year, winnerName);

@@ -12,8 +12,8 @@ module.exports = async function main(callback) {
 
     await trophy.mintNFT(
       owner,
-      "QmYueiuRNmL4MiA2GwtVMm6ZagknXnSpQnB3z2gWbz36hP",
-      "https://gateway.pinata.cloud/ipfs/QmYueiuRNmL4MiA2GwtVMm6ZagknXnSpQnB3z2gWbz36hP"
+      "QmcSNhhP3a9wXQdEcTjV4gnQMv8QNVkEJ3bMx8Gh6UPmyG",
+      "https://gateway.pinata.cloud/ipfs/QmcSNhhP3a9wXQdEcTjV4gnQMv8QNVkEJ3bMx8Gh6UPmyG"
     );
 
     const tokenId = await trophy.tokenOfOwnerByIndex(owner, 0);
@@ -27,7 +27,7 @@ module.exports = async function main(callback) {
     });
     console.log(winnerName);
 
-    const yearsWithWinner = await trophy.getYearsWithWinner();
+    const yearsWithWinner = await trophy.getYearsWithWinner(tokenId);
     console.log(yearsWithWinner);
 
     callback(0);

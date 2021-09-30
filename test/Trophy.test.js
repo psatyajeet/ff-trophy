@@ -58,7 +58,7 @@ describe("Trophy", function () {
       "Knowshon Monero"
     );
 
-    const yearsWithWinner = await this.trophy.getYearsWithWinner();
+    const yearsWithWinner = await this.trophy.getYearsWithWinner(tokenId);
     expect(yearsWithWinner.length).to.be.equal(2);
     expect(yearsWithWinner[0].toString()).to.equal(year1.toString());
     expect(yearsWithWinner[1].toString()).to.equal(year2.toString());
