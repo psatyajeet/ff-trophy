@@ -21,15 +21,27 @@ describe("Trophy", function () {
   beforeEach(async function () {
     // Deploy a new Trophy contract for each test
     this.trophy = await Trophy.new({ from: owner });
+    await this.trophy.setBaseURI("some-base-URI", { from: owner });
 
-    await this.trophy.mintNFT(
-      user1,
-      "QmfAvnM89JrqvdhLymbU5sXoAukEJygSLk9cJMBPTyrmxo",
-      "ipfs://QmfAvnM89JrqvdhLymbU5sXoAukEJygSLk9cJMBPTyrmxo",
-      { from: owner }
-    );
+    await this.trophy.mintNFT(user1, { from: user1 });
 
     tokenId = await this.trophy.tokenOfOwnerByIndex(user1, 0);
+  });
+
+  it("allows owner to setBaseURI", async function () {
+    this.trophy.setBaseURI("another-base-URI", {
+      from: owner,
+    }),
+      expect(await this.trophy.baseURI()).to.be.equal("another-base-URI");
+  });
+
+  it("does not allow non owner to setBaseURI", async function () {
+    await expectRevert(
+      this.trophy.setBaseURI("another-base-URI", {
+        from: user1,
+      }),
+      "Ownable: caller is not the owner"
+    );
   });
 
   it("retrieve returns a trophy name previously stored", async function () {
@@ -64,12 +76,12 @@ describe("Trophy", function () {
     expect(yearsWithWinner[1].toString()).to.equal(year2.toString());
   });
 
-  it("does not allow different user to set winner", async function () {
+  it("does not allow different user to setWinnerName", async function () {
     await expectRevert(
       this.trophy.setWinnerName(tokenId, "Knowshon Monero", {
         from: other,
       }),
-      "ERC721: setWinnerName caller is not owner nor approved"
+      "Trophy: setWinnerName caller is not owner nor approved"
     );
   });
 
@@ -83,7 +95,7 @@ describe("Trophy", function () {
       this.trophy.setWinnerName(tokenId, "Knowshon Monero", {
         from: user1,
       }),
-      "Winner has already been set this year"
+      "Trophy: Winner has already been set this year"
     );
 
     expect(await this.trophy.getWinnerName(tokenId, year1)).to.be.equal(

@@ -5,26 +5,20 @@ module.exports = async function main(callback) {
     const accounts = await web3.eth.getAccounts();
     console.log(accounts);
 
-    const [owner, other] = accounts;
+    const [owner, user1, other] = accounts;
 
     const Trophy = artifacts.require("Trophy");
     const trophy = await Trophy.deployed();
 
-    await trophy.mintNFT(
-      owner,
-      "QmcSNhhP3a9wXQdEcTjV4gnQMv8QNVkEJ3bMx8Gh6UPmyG",
-      "https://gateway.pinata.cloud/ipfs/QmcSNhhP3a9wXQdEcTjV4gnQMv8QNVkEJ3bMx8Gh6UPmyG"
-    );
+    await trophy.mintNFT(user1, { from: user1 });
 
-    const tokenId = await trophy.tokenOfOwnerByIndex(owner, 0);
+    const tokenId = await trophy.tokenOfOwnerByIndex(user1, 0);
 
     await trophy.setWinnerName(tokenId, "Bend it like Beckham", {
-      from: owner,
+      from: user1,
     });
 
-    const winnerName = await trophy.getWinnerName(tokenId, 2021, {
-      from: other,
-    });
+    const winnerName = await trophy.getWinnerName(tokenId, 2021);
     console.log(winnerName);
 
     const yearsWithWinner = await trophy.getYearsWithWinner(tokenId);

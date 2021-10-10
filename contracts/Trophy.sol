@@ -13,27 +13,21 @@ contract Trophy is ERC721, Ownable {
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIds;
 
-  mapping(string => uint8) hashes;
+  // Base URI
+  string private _baseURI;
+
   mapping(uint256 => mapping(uint16 => string)) yearToWinner;
   mapping(uint256 => uint16[]) yearsWithWinner;
 
-  event WinnerNameSet(uint256 tokenId, uint16 year, string winnerName);
+  event WinnerNameSet(uint256 indexed tokenId, uint16 year, string winnerName);
 
   constructor() ERC721("Fantasy Football Trophy", "TROPHY") {}
 
-  function mintNFT(
-    address recipient,
-    string memory hash,
-    string memory tokenURI
-  ) public onlyOwner returns (uint256) {
-    require(hashes[hash] != 1, "token with hash already exists");
-    hashes[hash] = 1;
-
+  function mintNFT(address recipient) public returns (uint256) {
     _tokenIds.increment();
 
     uint256 newItemId = _tokenIds.current();
     _safeMint(recipient, newItemId);
-    _setTokenURI(newItemId, tokenURI);
 
     return newItemId;
   }
@@ -67,7 +61,7 @@ contract Trophy is ERC721, Ownable {
   function setWinnerName(uint256 tokenId, string memory winnerName) public {
     require(
       _isApprovedOrOwner(_msgSender(), tokenId),
-      "ERC721: setWinnerName caller is not owner nor approved"
+      "Trophy: setWinnerName caller is not owner nor approved"
     );
 
     uint16 year = getYear();
@@ -75,13 +69,17 @@ contract Trophy is ERC721, Ownable {
     require(
       keccak256(abi.encodePacked(yearToWinner[tokenId][year])) ==
         keccak256(abi.encodePacked("")),
-      "Winner has already been set this year"
+      "Trophy: Winner has already been set this year"
     );
 
     yearsWithWinner[tokenId].push(year);
     yearToWinner[tokenId][year] = winnerName;
 
     emit WinnerNameSet(tokenId, year, winnerName);
+  }
+
+  function setBaseURI(string memory baseURI) public onlyOwner {
+    _setBaseURI(baseURI);
   }
 
   function getYear() public view returns (uint16) {

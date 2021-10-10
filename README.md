@@ -16,7 +16,6 @@ npx truffle console --network development
 
 ```
 npx truffle compile
-npx truffle migrate --network development
 npx truffle test
 ```
 
