@@ -16,20 +16,34 @@ contract Trophy is ERC721, Ownable {
   // Base URI
   string private _baseURI;
 
+  // Mapping from token id to league name
+  mapping(uint256 => string) tokenToLeagueName;
+
+  // Mapping from token id to mapping of year to winner name
   mapping(uint256 => mapping(uint16 => string)) yearToWinner;
+
+  // Mapping from token id to list of years with winner
   mapping(uint256 => uint16[]) yearsWithWinner;
 
   event WinnerNameSet(uint256 indexed tokenId, uint16 year, string winnerName);
 
   constructor() ERC721("Fantasy Football Trophy", "TROPHY") {}
 
-  function mintNFT(address recipient) public returns (uint256) {
+  function mintNFT(address recipient, string memory leagueName)
+    public
+    returns (uint256)
+  {
     _tokenIds.increment();
 
     uint256 newItemId = _tokenIds.current();
     _safeMint(recipient, newItemId);
+    tokenToLeagueName[newItemId] = leagueName;
 
     return newItemId;
+  }
+
+  function getLeagueName(uint256 tokenId) public view returns (string memory) {
+    return tokenToLeagueName[tokenId];
   }
 
   function getWinnerName(uint256 tokenId, uint16 year)

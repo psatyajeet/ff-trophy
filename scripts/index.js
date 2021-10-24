@@ -10,7 +10,7 @@ module.exports = async function main(callback) {
     const Trophy = artifacts.require("Trophy");
     const trophy = await Trophy.deployed();
 
-    await trophy.mintNFT(user1, { from: user1 });
+    await trophy.mintNFT(user1, "Bitwise HODL", { from: user1 });
 
     const tokenId = await trophy.tokenOfOwnerByIndex(user1, 0);
 

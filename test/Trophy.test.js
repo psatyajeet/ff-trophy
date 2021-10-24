@@ -23,7 +23,7 @@ describe("Trophy", function () {
     this.trophy = await Trophy.new({ from: owner });
     await this.trophy.setBaseURI("some-base-URI", { from: owner });
 
-    await this.trophy.mintNFT(user1, { from: user1 });
+    await this.trophy.mintNFT(user1, "My Fantasy League", { from: user1 });
 
     tokenId = await this.trophy.tokenOfOwnerByIndex(user1, 0);
   });
@@ -44,7 +44,13 @@ describe("Trophy", function () {
     );
   });
 
-  it("retrieve returns a trophy name previously stored", async function () {
+  it("getLeagueName returns the league's name", async function () {
+    expect(await this.trophy.getLeagueName(tokenId)).to.be.equal(
+      "My Fantasy League"
+    );
+  });
+
+  it("getWinnerName returns a trophy name previously stored", async function () {
     const year1 = await this.trophy.getYear();
     const receipt = await this.trophy.setWinnerName(tokenId, "Hodl the rock", {
       from: user1,
